@@ -1,9 +1,20 @@
 import { api } from './config'
 
 const listarClientes = () => 
-  api
-    .get('/clientes')
-    .then(resposta => resposta.data)
+  fetch('http://localhost:4000', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: '{clientes {nome, cpf}}'
+    })
+  })
+  .then(response => response.json())
+  .then(response => {
+    console.log(response)
+    return [];
+  })
 
 const buscarClientePorId = id => 
   api

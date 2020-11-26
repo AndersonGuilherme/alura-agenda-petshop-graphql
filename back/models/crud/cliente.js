@@ -6,12 +6,11 @@ class Cliente {
     return executaQuery(sql).then(response => {
       const clientes = response[0];
       const pets = response[1];
-      const teste = clientes.map(cliente => {
+      return clientes.map(cliente => {
         cliente.pets = pets.filter(pet => pet.donoId === cliente.id);
         return cliente
       })
     })
-
   }
 
   buscaPorId( id) {
