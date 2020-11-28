@@ -3,6 +3,7 @@ import graphql from 'graphql-tag'
 export const LISTAR_PETS = graphql`
     query {
         pets {
+            id
             nome
             tipo
             dono { 
@@ -28,5 +29,19 @@ export const ADICIONAR_PET = graphql`
         ) {
             nome
         }
-    }
+    }`
+
+export const BUSCAR_PET = graphql`
+ query pet($id: ID!) {
+   pet(id: $id) {
+     id
+     nome
+     tipo
+     observacoes
+     dono {
+       id
+       nome
+     }
+   }
+ }
 `

@@ -1,6 +1,8 @@
 import React from 'react'
-import petsApi from '../../../api/pets'
+import { Query } from 'react-apollo'
+// import petsApi from '../../../api/pets'
 
+import {BUSCAR_PET} from '../../../graphql/pets'
 class Visualizar extends React.Component {
   constructor(props) {
     super(props)
@@ -15,25 +17,33 @@ class Visualizar extends React.Component {
 
   componentDidMount() {
     const { id } = this.props.match.params
-    petsApi.buscarPetPorId(id)
-      .then(pet => this.setState({
-        nome: pet.nome,
-        tipo: pet.tipo,
-        dono: pet.donoId,
-        observacoes: pet.observacoes
-      }))
+    // petsApi.buscarPetPorId(id)
+    //   .then(pet => this.setState({
+    //     nome: pet.nome,
+    //     tipo: pet.tipo,
+    //     dono: pet.donoId,
+    //     observacoes: pet.observacoes
+    //   }))
   }
 
   render() {
     return (
-      <div>
-        <h1>Visualizar Pet</h1>
-
-        <p>Nome: {this.state.nome}</p>
-        <p>Tipo: {this.state.tipo}</p>
-        <p>Dono: {this.state.dono}</p>
-        <p>Observações: {this.state.observacoes}</p>
-       </div>
+      <Query query={BUSCAR_PET} variables={{ id: this.props.match.params.id }}>
+        {
+          ({ data }) => {
+           const pet = (data && data.pet) || {}
+           if(pet){
+            return (<div>
+              <h1>Visualizar Pet</h1>
+              <p>Nome: {pet.nome && pet.nome}</p>
+              <p>Tipo: {pet.tipo && pet.tipo}</p>
+              <p>Dono: {pet.dono && pet.dono.nome}</p>
+              <p>Observações: {pet.observacoes && pet.observacoes}</p>
+            </div>)
+            }
+          }
+        }
+      </Query>
     )
   }
 }
