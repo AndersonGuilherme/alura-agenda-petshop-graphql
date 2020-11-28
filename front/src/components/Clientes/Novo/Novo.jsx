@@ -1,6 +1,5 @@
 import React from 'react'
 import clientesApi from '../../../api/clientes'
-import clientes from '../../../api/clientes';
 
 class Novo extends React.Component {
   constructor(props) {

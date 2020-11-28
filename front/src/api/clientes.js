@@ -1,40 +1,44 @@
-import { api } from './config'
+import { fetchOptions } from './config'
 
 const listarClientes = () => 
-  fetch('http://localhost:4000', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: '{clientes {nome, cpf}}'
-    })
-  })
+  fetchOptions('{clientes {id, nome, cpf}}')
   .then(response => response.json())
-  .then(response => {
-    console.log(response)
-    return [];
-  })
+  .then(response => response.data.clientes)
 
 const buscarClientePorId = id => 
-  api
-    .get(`/clientes/cliente/${id}`)
-    .then(resposta => resposta.data[0])
+    fetchOptions(`{cliente(id: ${id})  { nome, cpf}}`)
+    .then(response => response.json())
+    .then(response => response.data.cliente)
 
 const adicionarCliente = cliente => 
-  api
-    .post('/clientes/cliente', cliente)
-    .then(resposta => resposta.data)
+ fetchOptions(`
+    mutation { 
+      storeCliente(nome: "${cliente.nome}",cpf: "${cliente.cpf}" )
+      {
+        id, nome, cpf
+      }
+    }`)
+    .then(response => response.json())
+    .then(response => response.data.cliente)
 
 const alterarCliente = (id, cliente) =>
-  api
-    .put(`/clientes/cliente/${id}`, cliente)
-    .then(resposta => resposta.data)
+  fetchOptions(`
+    mutation { 
+      updateCliente(id: "${id}", nome: "${cliente.nome}",cpf: "${cliente.cpf}" )
+      {
+        id, nome, cpf
+      }
+    }`)
+   .then(response => response.json())
+   .then(response => response.data.cliente)
 
 const removerCliente = id => 
-  api
-    .delete(`/clientes/cliente/${id}`)
-    .then(resposta => resposta.data)
+fetchOptions(`
+  mutation { 
+    destroyCliente(id: "${id}" )
+  }`)
+ .then(response => response.json())
+ .then(response => response.data.cliente)
 
 export default {
   listarClientes,
